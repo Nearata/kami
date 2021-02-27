@@ -1,0 +1,46 @@
+{% extends "layouts/base.html" %}
+
+{% block head_title %}
+Login |
+{% endblock %}
+
+{% block main %}
+<div class="auth">
+    <div class="card">
+        <div class="card__header">
+            <h1 class="h1 card__title">Login</h1>
+        </div>
+        <div class="card__body">
+            {% if errors %}
+            <div class="alert alert--warning">
+                {% for i in errors %}
+                <div class="alert__message">{{ i }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <form class="form" method="post">
+                <div class="form__group">
+                    <label class="label" for="name">Username</label>
+                    <input class="input" type="text" name="name" placeholder="Username" autocomplete="off" required>
+                </div>
+                <div class="form__group">
+                    <label class="label" for="password">Password</label>
+                    <input class="input" type="password" name="password" placeholder="Password" autocomplete="off" required>
+                </div>
+                {% if captcha %}
+                <div class="form__group">
+                    <div class="h-captcha" data-sitekey="{{ captcha_sitekey }}"></div>
+                </div>
+                {% endif %}
+                <button class="button button--full" type="submit">Login</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% if captcha %}
+{% block js %}
+<script src="https://hcaptcha.com/1/api.js" async defer></script>
+{% endblock %}
+{% endif %}

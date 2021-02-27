@@ -1,0 +1,44 @@
+{% extends "layouts/base.html" %}
+
+{% block main %}
+<div id="table">
+    <input class="search input" type="search" placeholder="Search..." />
+    <table class="table">
+        <caption></caption>
+        <thead class="table__thead">
+            <tr>
+                <th class="thead__element" scope="col">Title</th>
+                <th class="thead__element" scope="col">Fansub</th>
+                <th class="thead__element" scope="col">URL</th>
+            </tr>
+        </thead>
+        <tbody class="table__tbody list">
+            {% for i in anime %}
+            <tr class="table__row">
+                <td class="title tbody__element" data-label="Title">{{ i.name }}</td>
+                <td class="tbody__element" data-label="Fansub">
+                    <span class="fansub" title="{{ i.fansub }}">{{ i.fansub }}</span>
+                </td>
+                <td class="tbody__element" data-label="URL">
+                    {% for url in i.url %}
+                    <a class="element__link" href="{{ url.href }}" target="_blank">{{ url.name }}</a>
+                    {% endfor %}
+                </td>
+            </tr>
+            {% endfor %}
+            {% if not anime %}
+            <tr class="table__row">
+                <td class="tbody__element" colspan="3">No anime.</td>
+            </tr>
+            {% endif %}
+        </tbody>
+        <tfoot class="table__foot">
+            <tr>
+                <td colspan="2">
+                    <ul class="pagination"></ul>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+{% endblock %}

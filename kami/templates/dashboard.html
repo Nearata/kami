@@ -1,0 +1,24 @@
+{% extends "layouts/base.html" %}
+
+{% block head_title %}
+Dashboard |
+{% endblock %}
+
+{% block main %}
+<div class="dashboard">
+    <div class="dashboard-nav">
+        <div class="dashboard-nav__group">
+            <span class="dashboard-group__label">Account</span>
+            <a class="dashboard-group__item {% if request.path == '/security' %}active{% endif %}" href="{{ url_for('account_security') }}">Security</a>
+        </div>
+        {% if request.state.is_admin %}
+        <div class="dashboard-nav__group">
+            <span class="dashboard-group__label">Admin</span>
+            <a class="dashboard-group__item {% if request.path == '/anime' %}active{% endif %}" href="{{ url_for('admin_anime') }}">Anime</a>
+            <a class="dashboard-group__item {% if request.path == '/fansub' %}active{% endif %}" href="{{ url_for('admin_fansub') }}">Fansub</a>
+        </div>
+        {% endif %}
+    </div>
+    <div class="dashboard-content">{% block content %}{% endblock %}</div>
+</div>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends "dashboard.html" %}
+
+{% block head_title %}
+Two Factor |
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card__header">
+        <h1 class="h1 card__title">Two Factor</h1>
+    </div>
+    <div class="card__body">
+        {% if errors %}
+        <div class="alert alert--warning">
+            {% for i in errors %}
+            <div class="alert__message">{{ i }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% if success %}
+        <div class="alert alert--success">
+            <div class="alert__message">{{ success }}</div>
+        </div>
+        {% endif %}
+        <form class="form" method="post">
+            {% if not is_twofa %}
+            <input type="hidden" name="secret" value="{{ secret }}">
+            <div class="form__group">
+                <label class="label">QRCode</label>
+                <div id="qrcode"></div>
+                <pre class="pre">
+                    <code class="code">{{ secret }}</code>
+                </pre>
+            </div>
+            {% endif %}
+            <div class="form__group">
+                <label class="label" for="password">Password</label>
+                <input class="input input--full" type="password" name="password" placeholder="Password" autocomplete="off" required>
+            </div>
+            <div class="form__group">
+                <label class="label" for="code">Code</label>
+                <input class="input input--full" type="text" name="code" placeholder="Enter two factor code" autocomplete="off" required>
+            </div>
+            <button class="button" type="submit">
+                {% if is_twofa %}
+                Disable
+                {% else %}
+                Activate
+                {% endif %}
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+    new QRCode(document.querySelector("#qrcode"), "{{ qrcode }}");
+</script>
+{% endblock %}

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{{ site_description }}">
+    <meta name="theme-color" content="#1f2631">
+    <meta property="og:title" content="{{ site_name }}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url_for('home') }}">
+    <meta property="og:image" content="{{ url_for('static', path=logo) }}">
+    <meta property="og:site_name" content="{{ site_name }}">
+    <meta property="og:description" content="{{ site_description }}">
+    <meta property="og:locale" content="en_UK">
+    <title>{% block head_title %}{% endblock %}{{ site_name }}</title>
+    {% if favicon %}
+    <link rel="shortcut icon" href="{{ url_for('static', path=favicon) }}" type="image/x-icon">
+    {% endif %}
+    <link rel="stylesheet" href="{{ url_for('static', path='css/fontawesome.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', path='css/roboto.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/modern-normalize.min.css') }}">
+    {% block css %}{% endblock %}
+    <link rel="stylesheet" href="{{ url_for('static', path='css/kami.css') }}">
+</head>
+<body>
+    <nav class="mobilenav" aria-label="Mobile navigation bar">
+        <a class="mobilenav__element" href="{{ url_for('home') }}">
+            <em class="fas fa-home mobilenav__icon"></em>
+        </a>
+        {% if request.cookies.get("jwt_token") %}
+        <a class="mobilenav__element" href="{{ url_for('dashboard') }}">
+            <em class="fas fa-tachometer-alt mobilenav__icon"></em>
+        </a>
+        <a class="nav__item" href="{{ url_for('logout') }}">
+            <em class="fas fa-sign-out-alt mobilenav__icon"></em>
+        </a>
+        {% else %}
+        <a class="nav__item" href="{{ url_for('login') }}">
+            <em class="fas fa-sign-in-alt mobilenav__icon"></em>
+        </a>
+        {% endif %}
+    </nav>
+    <header class="header">
+        <nav class="nav" aria-label="Main navigation bar">
+            <a class="nav__logo" href="{{ url_for('home') }}">
+                {% if logo %}
+                <img src="{{ url_for('static', path=logo) }}" alt="Website logo" title="{{ site_name }}">
+                {% else %}
+                {{ site_name }}
+                {% endif %}
+            </a>
+            <div class="nav__left">
+                <a class="nav__item" href="{{ url_for('home') }}">Home</a>
+            </div>
+            <div class="nav__right">
+                {% if request.cookies.get("jwt_token") %}
+                <a class="nav__item button" href="{{ url_for('dashboard') }}">Dashboard</a>
+                <a class="nav__item" href="{{ url_for('logout') }}">Logout</a>
+                {% else %}
+                <a class="nav__item" href="{{ url_for('login') }}">Login</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+    <main class="main" role="main">
+        {% block main %}{% endblock %}
+    </main>
+    <footer class="footer">
+        <ul class="footer__ul">
+            {% if discord_url %}
+            <li class="footer__li">
+                <a class="footer__link" href="{{ discord_url }}" target="_blank">Discord</a>
+            </li>
+            {% endif %}
+            {% if twitter_url %}
+            <li class="footer__li">
+                <a class="footer__link" href="{{ twitter_url }}" target="_blank">Twitter</a>
+            </li>
+            {% endif %}
+        </ul>
+    </footer>
+    {% block js %}{% endblock %}
+    <script src="{{ url_for('static', path='js/list.min.js') }}"></script>
+    <script src="{{ url_for('static', path='js/kami.js') }}"></script>
+</body>
+</html>

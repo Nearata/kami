@@ -1,0 +1,34 @@
+{% extends "dashboard.html" %}
+
+{% block head_title %}
+Edit Fansub |
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card__header">
+        <h1 class="h1 card__title">Edit Fansub</h1>
+    </div>
+    <div class="card__body">
+        {% if success %}
+        <div class="alert alert--success">
+            <div class="alert__message">{{ success }}</div>
+        </div>
+        {% endif %}
+        {% if error %}
+        <div class="alert alert--warning">
+            <div class="alert__message">{{ error }}</div>
+        </div>
+        {% endif %}
+        <div class="section">
+            <form class="form" method="post">
+                <div class="form__group">
+                    <label class="label" for="name">Name</label>
+                    <input class="input input--full" type="text" name="name" placeholder="{{ name }}" value="{{ name }}" autocomplete="off" required>
+                </div>
+                <button class="button" type="submit">Save changes</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
