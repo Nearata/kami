@@ -342,12 +342,6 @@ body {
 }
 
 /* Mobile */
-.mobilelogo {
-    text-align: center;
-    margin-top: 1rem;
-    display: none;
-}
-
 .mobilenav {
     position: fixed;
     bottom: 0;
@@ -375,10 +369,6 @@ body {
 
 /* Queries */
 @media (max-width: 576px) {
-    .mobilelogo {
-        display: block;
-    }
-
     .mobilenav {
         display: flex;
     }
