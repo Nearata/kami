@@ -41,12 +41,10 @@
         {% endif %}
     </nav>
     <header class="header">
-        <nav class="nav" aria-label="Main navigation bar">
+        <nav class="nav {% if not logo %}nav__logo--hidden{% endif %}" aria-label="Main navigation bar">
             <a class="nav__logo" href="{{ url_for('home') }}">
                 {% if logo %}
                 <img src="{{ url_for('static', path=logo) }}" alt="Website logo" title="{{ site_name }}">
-                {% else %}
-                {{ site_name }}
                 {% endif %}
             </a>
             <div class="nav__left">
