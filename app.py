@@ -2,7 +2,7 @@ from uvicorn import run as uvicorn_run
 
 from kami.main import create_app
 from kami.database import db, MODELS
-from kami.config import DEBUG
+from kami.config import DEBUG, JWT_SECRET
 
 
 app = create_app()
@@ -22,6 +22,9 @@ def database_disconnect():
 
 
 def main() -> None:
+    if str(JWT_SECRET) == "secret":
+        print(f"WARN: Please generate a JWT Secret.")
+
     uvicorn_run(
         "app:app",
         host="0.0.0.0",
