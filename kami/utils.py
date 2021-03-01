@@ -29,5 +29,5 @@ def hash_password(password: str) -> Any:
     try:
         return ph.hash(password)
     except HashingError as e:
-        print(f"ERROR::", e)
+        print("ERROR::", e)
         return None

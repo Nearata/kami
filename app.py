@@ -23,7 +23,7 @@ def database_disconnect():
 
 def main() -> None:
     if str(JWT_SECRET) == "secret":
-        print(f"WARN: Please generate a JWT Secret.")
+        print("WARN: Please generate a JWT Secret.")
 
     uvicorn_run(
         "app:app",
