@@ -11,7 +11,10 @@ class JwtMiddleware(BaseHTTPMiddleware):
         request.state.is_admin = False
 
         if jwt_token:
-            jwt_decoded = jwt_decode(jwt_token)
-            request.state.is_admin = jwt_decoded.get("is_admin", False)
+            try:
+                jwt_decoded = jwt_decode(jwt_token)
+                request.state.is_admin = jwt_decoded.get("is_admin", False)
+            except Exception:
+                pass
 
         return await call_next(request)
