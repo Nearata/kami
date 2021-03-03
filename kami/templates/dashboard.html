@@ -16,6 +16,7 @@ Dashboard |
             <span class="dashboard-group__label">Admin</span>
             <a class="dashboard-group__item {% if request.path == '/anime' %}active{% endif %}" href="{{ url_for('admin_anime') }}">Anime</a>
             <a class="dashboard-group__item {% if request.path == '/fansub' %}active{% endif %}" href="{{ url_for('admin_fansub') }}">Fansub</a>
+            <a class="dashboard-group__item {% if request.path == '/pages' %}active{% endif %}" href="{{ url_for('pages') }}">Pages</a>
         </div>
         {% endif %}
     </div>

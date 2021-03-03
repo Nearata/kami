@@ -11,6 +11,12 @@ body {
     margin: 0 auto;
 }
 
+a {
+    text-decoration: none;
+    color: #794bc4;
+    cursor: pointer;
+}
+
 .h-captcha {
     text-align: center;
 }
@@ -175,7 +181,8 @@ body {
     font-weight: 500;
 }
 
-.input {
+.input,
+.textarea {
     border: .1rem solid #ddd;
     padding: .5rem .75rem;
     outline: none;
@@ -347,6 +354,16 @@ body {
 
 .footer__link:hover {
     color: #794bc4;
+}
+
+#page-frontend a {
+    border-bottom: .1rem solid #ccc;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+#page-frontend a:hover {
+    border-color: #794bc4;
 }
 
 /* Mobile */

@@ -27,6 +27,11 @@
         <a class="mobilenav__element" href="{{ url_for('home') }}">
             <em class="fas fa-home mobilenav__icon"></em>
         </a>
+        {% for i in request.app.state.pages %}
+        <a class="mobilenav__element" href="{{ request.base_url }}{{ i.slug }}">
+            <em class="{{ i.icon }} mobilenav__icon"></em>
+        </a>
+        {% endfor %}
         {% if request.cookies.get("jwt_token") %}
         <a class="mobilenav__element" href="{{ url_for('dashboard') }}">
             <em class="fas fa-tachometer-alt mobilenav__icon"></em>
@@ -49,6 +54,9 @@
             </a>
             <div class="nav__left">
                 <a class="nav__item" href="{{ url_for('home') }}">Home</a>
+                {% for i in request.app.state.pages %}
+                <a class="nav__item" href="{{ request.base_url }}{{ i.slug }}">{{ i.name }}</a>
+                {% endfor %}
             </div>
             <div class="nav__right">
                 {% if request.cookies.get("jwt_token") %}

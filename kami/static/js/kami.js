@@ -38,3 +38,15 @@ new List('table', {
         }, false);
     }
 });
+
+var pageFrontend = document.querySelector('#page-frontend');
+
+if (pageFrontend) {
+    var md = window.markdownit({
+        html: true,
+        typographer: true
+    });
+
+    var text = pageFrontend.textContent;
+    pageFrontend.innerHTML = md.render(text);
+}

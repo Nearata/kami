@@ -1,0 +1,53 @@
+{% extends "dashboard.html" %}
+
+{% block head_title %}
+Pages |
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card__header">
+        <h1 class="h1 card__title">Pages</h1>
+    </div>
+    <div class="card__body">
+        {% if error %}
+        <div class="alert alert--warning">
+            <div class="alert__message">{{ error }}</div>
+        </div>
+        {% endif %}
+
+        <div class="section">
+            <h2 class="h2 section__title">Add page</h2>
+            <a class="button" href="{{ url_for('pages_add') }}">Add page</a>
+        </div>
+        <div class="section">
+            <h2 class="h2 section__title">Remove page</h2>
+            <a class="button" href="{{ url_for('pages_remove') }}">Remove page</a>
+        </div>
+        <div class="section">
+            <h2 class="h2 section__title">Edit page</h2>
+            <form class="form" method="post">
+                <div class="form__group">
+                    <select id="select-edit" name="id" placeholder="Select page..." autocomplete="off" required>
+                        {% if not pages %}
+                        <option value="">No pages.</option>
+                        {% endif %}
+                        {% for i in pages %}
+                        <option value="{{ i.id }}">{{ i.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button class="button" type="submit">Edit page</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/tom-select.min.css') }}">
+{% endblock %}
+
+{% block js %}
+<script src="{{ url_for('static', path='js/tom-select.base.min.js') }}"></script>
+{% endblock %}

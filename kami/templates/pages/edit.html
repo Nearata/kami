@@ -1,0 +1,48 @@
+{% extends "dashboard.html" %}
+
+{% block head_title %}
+Edit page |
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card__header">
+        <h1 class="h1 card__title">Edit page</h1>
+    </div>
+    <div class="card__body">
+        {% if errors %}
+        <div class="alert alert--warning">
+            {% for i in errors %}
+            <div class="alert__message">{{ i }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if success %}
+        <div class="alert alert--success">
+            <div class="alert__message">{{ success }}</div>
+        </div>
+        {% endif %}
+
+        <form class="form" method="post">
+            <div class="form__group">
+                <label class="label" for="name">Name</label>
+                <input class="input" type="text" name="name" autocomplete="off" value="{{ name }}" placeholder="{{ name }}">
+            </div>
+            <div class="form__group">
+                <label class="label" for="slug">Slug</label>
+                <input class="input" type="text" name="slug" autocomplete="off" value="{{ slug }}" placeholder="{{ slug }}">
+            </div>
+            <div class="form__group">
+                <label class="label" for="icon">Icon</label>
+                <input class="input" type="text" name="icon" autocomplete="off" value="{{ icon }}" placeholder="{{ icon }}">
+            </div>
+            <div class="form__group">
+                <label class="label" for="content">Content</label>
+                <textarea class="textarea" name="content" id="" cols="30" rows="10">{{ content }}</textarea>
+            </div>
+            <button class="button" type="submit">Edit page</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

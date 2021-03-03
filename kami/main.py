@@ -10,9 +10,11 @@ from kami.routes.dashboard import Dashboard, AccountSecurity
 from kami.routes.anime import AdminAnime, AdminAnimeEdit
 from kami.routes.fansub import AdminFansub, AdminFansubEdit
 from kami.routes.changepassword import ChangePassword
+from kami.routes.pages import Pages, PagesAdd, PagesRemove, PagesEdit, PagesGet
 from kami.exceptions import not_found
 from kami.config import DEBUG, ALLOWED_HOSTS
 from kami.middleware.jwt import JwtMiddleware
+from kami.middleware.pages import PagesMiddleware
 
 
 def create_app() -> Starlette:
@@ -31,9 +33,14 @@ def create_app() -> Starlette:
                 Route("/anime", AdminAnime, name="admin_anime"),
                 Route("/anime/{id:int}", AdminAnimeEdit, name="admin_anime_edit"),
                 Route("/fansub", AdminFansub, name="admin_fansub"),
-                Route("/fansub/{id:int}", AdminFansubEdit, name="admin_fansub_edit")
+                Route("/fansub/{id:int}", AdminFansubEdit, name="admin_fansub_edit"),
+                Route("/pages", Pages, name="pages"),
+                Route("/pages/add", PagesAdd, name="pages_add"),
+                Route("/pages/remove", PagesRemove, name="pages_remove"),
+                Route("/pages/edit/{id:int}", PagesEdit, name="pages_edit")
             ])
-        ])
+        ]),
+        Route("/{slug}", PagesGet, name="pages_get")
     ]
 
     exceptions = {
@@ -42,7 +49,8 @@ def create_app() -> Starlette:
 
     middleware = [
         Middleware(TrustedHostMiddleware, allowed_hosts=list(ALLOWED_HOSTS)),
-        Middleware(JwtMiddleware)
+        Middleware(JwtMiddleware),
+        Middleware(PagesMiddleware)
     ]
 
     app = Starlette(debug=DEBUG, routes=routes, exception_handlers=exceptions, middleware=middleware)

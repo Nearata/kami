@@ -1,0 +1,47 @@
+{% extends "dashboard.html" %}
+
+{% block head_title %}
+Remove page |
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card__header">
+        <h1 class="h1 card__title">Remove page</h1>
+    </div>
+    <div class="card__body">
+        {% if error %}
+        <div class="alert alert--warning">
+            <div class="alert__message">{{ error }}</div>
+        </div>
+        {% endif %}
+
+        {% if success %}
+        <div class="alert alert--success">
+            <div class="alert__message">{{ success }}</div>
+        </div>
+        {% endif %}
+
+        <form class="form" method="post">
+            <div class="form__group">
+                <label class="label" for="id">Name</label>
+                <select id="select-remove" name="id" placeholder="Select page..." autocomplete="off" required>
+                    <option value="">None</option>
+                    {% for i in pages %}
+                    <option value="{{ i.id }}">{{ i.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button class="button" type="submit">Remove page</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/tom-select.min.css') }}">
+{% endblock %}
+
+{% block js %}
+<script src="{{ url_for('static', path='js/tom-select.base.min.js') }}"></script>
+{% endblock %}

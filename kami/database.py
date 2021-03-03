@@ -48,9 +48,22 @@ class UsersSessions(Model):
     jwt_token = TextField(default="")
 
 
+class Pages(Model):
+    class Meta:
+        database = db
+
+    name = TextField(unique=True, default="")
+    slug = TextField(default="")
+    content = TextField(default="")
+    icon = TextField(default="")
+    created_at = DateTimeField(default=datetime.now)
+    updated_at = DateTimeField(default=datetime.now)
+
+
 MODELS = [
     Anime,
     Users,
     UsersSessions,
-    Fansub
+    Fansub,
+    Pages
 ]

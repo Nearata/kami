@@ -1,0 +1,13 @@
+{% extends "layouts/base.html" %}
+
+{% block head_title %}
+{{ name }} |
+{% endblock %}
+
+{% block main %}
+<div id="page-frontend">{{content}}</div>
+{% endblock %}
+
+{% block js %}
+<script src="{{ url_for('static', path='js/markdown-it.min.js') }}"></script>
+{% endblock %}
