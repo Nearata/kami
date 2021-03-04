@@ -13,7 +13,7 @@ from kami.jwt import jwt_decode
 def jwt_authenticated(func: Callable) -> Callable:
     @wraps(func)
     async def decorator(*args: Any, **kwargs: Any) -> Callable:
-        request = get_request(args)
+        request = __get_request(args)
         jwt_token = request.cookies.get("jwt_token", "")
 
         if not jwt_token:
@@ -46,7 +46,7 @@ def jwt_authenticated(func: Callable) -> Callable:
 def jwt_not_authenticated(func: Callable) -> Callable:
     @wraps(func)
     async def decorator(*args: Any, **kwargs: Any) -> Callable:
-        request = get_request(args)
+        request = __get_request(args)
 
         if request.cookies.get("jwt_token"):
             return RedirectResponse(request.url_for("dashboard"))
@@ -57,7 +57,7 @@ def jwt_not_authenticated(func: Callable) -> Callable:
 def jwt_is_admin(func: Callable) -> Callable:
     @wraps(func)
     async def decorator(*args: Any, **kwargs: Any) -> Callable:
-        request = get_request(args)
+        request = __get_request(args)
 
         if not request.state.is_admin:
             raise HTTPException(404)
@@ -65,7 +65,7 @@ def jwt_is_admin(func: Callable) -> Callable:
         return await func(*args, **kwargs)
     return decorator
 
-def get_request(args: tuple) -> Request:
+def __get_request(args: tuple) -> Request:
     request = None
 
     for i in args:
