@@ -39,6 +39,8 @@ class Users(Model):
     is_admin = BooleanField(default=False)
     is_twofa = BooleanField(default=False)
     twofa_secret = TextField(default="")
+    created_at = DateTimeField(default=datetime.now)
+    updated_at = DateTimeField(default=datetime.now)
 
 
 class UsersSessions(Model):
@@ -48,6 +50,8 @@ class UsersSessions(Model):
 
     user_id = IntegerField(default="")
     jwt_token = TextField(default="")
+    created_at = DateTimeField(default=datetime.now)
+    updated_at = DateTimeField(default=datetime.now)
 
 
 class Pages(Model):
