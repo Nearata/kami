@@ -1,0 +1,47 @@
+{% extends "dashboard.html" %}
+
+{% block head_title %}
+Remove Fansub |
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card__header">
+        <h1 class="h1 card__title">Remove Fansub</h1>
+    </div>
+    <div class="card__body">
+        {% if success %}
+        <div class="alert alert--success">
+            <div class="alert__message">{{ success }}</div>
+        </div>
+        {% endif %}
+        {% if errors %}
+        <div class="alert alert--warning">
+            {% for i in errors %}
+            <div class="alert__message">{{ i }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form class="form" method="post">
+            <div class="form__group">
+                <select id="select-remove" name="id" placeholder="Select Fansub..." autocomplete="off" required>
+                    <option value="">None</option>
+                    {% for i in fansub %}
+                    <option value="{{ i.id }}">{{ i.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button class="button" type="submit">Remove fansub</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/tom-select.min.css') }}">
+{% endblock %}
+
+{% block js %}
+<script src="{{ url_for('static', path='js/tom-select.base.min.js') }}"></script>
+{% endblock %}

@@ -15,9 +15,11 @@ Edit Fansub |
             <div class="alert__message">{{ success }}</div>
         </div>
         {% endif %}
-        {% if error %}
+        {% if errors %}
         <div class="alert alert--warning">
-            <div class="alert__message">{{ error }}</div>
+            {% for i in errors %}
+            <div class="alert__message">{{ i }}</div>
+            {% endfor %}
         </div>
         {% endif %}
         <div class="section">

@@ -26,6 +26,8 @@ class Fansub(Model):
         database = db
 
     name = TextField(unique=True, default="")
+    created_at = DateTimeField(default=datetime.now)
+    updated_at = DateTimeField(default=datetime.now)
 
 
 class Users(Model):

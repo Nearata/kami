@@ -8,7 +8,7 @@ from kami.routes.home import Homepage
 from kami.routes.auth import Login, Logout
 from kami.routes.dashboard import Dashboard, AccountSecurity
 from kami.routes.anime import AnimeEndpoint, AnimeAdd, AnimeRemove, AnimeEdit
-from kami.routes.fansub import AdminFansub, AdminFansubEdit
+from kami.routes.fansub import FansubEndpoint, FansubAdd, FansubRemove, FansubEdit
 from kami.routes.changepassword import ChangePassword
 from kami.routes.pages import PagesEndpoint, PagesAdd, PagesRemove, PagesEdit, PagesGet
 from kami.exceptions import not_found
@@ -34,8 +34,10 @@ def create_app() -> Starlette:
                 Route("/anime/add", AnimeAdd, name="anime_add"),
                 Route("/anime/remove", AnimeRemove, name="anime_remove"),
                 Route("/anime/edit/{id:int}", AnimeEdit, name="anime_edit"),
-                Route("/fansub", AdminFansub, name="admin_fansub"),
-                Route("/fansub/{id:int}", AdminFansubEdit, name="admin_fansub_edit"),
+                Route("/fansub", FansubEndpoint, name="fansub"),
+                Route("/fansub/add", FansubAdd, name="fansub_add"),
+                Route("/fansub/remove", FansubRemove, name="fansub_remove"),
+                Route("/fansub/edit/{id:int}", FansubEdit, name="fansub_edit"),
                 Route("/pages", PagesEndpoint, name="pages"),
                 Route("/pages/add", PagesAdd, name="pages_add"),
                 Route("/pages/remove", PagesRemove, name="pages_remove"),
