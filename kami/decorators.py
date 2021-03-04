@@ -2,7 +2,8 @@ from functools import wraps
 from typing import Callable, Any
 
 from starlette.requests import Request
-from starlette.responses import PlainTextResponse, RedirectResponse
+from starlette.responses import RedirectResponse
+from starlette.exceptions import HTTPException
 from jwt.exceptions import InvalidTokenError
 
 from kami.database import UsersSessions
@@ -51,7 +52,7 @@ def jwt_is_admin(func: Callable) -> Callable:
         request = get_request(args)
 
         if not request.state.is_admin:
-            return PlainTextResponse("403 No Permission.", 403)
+            raise HTTPException(404)
 
         return await func(*args, **kwargs)
     return decorator
