@@ -9,7 +9,7 @@ Dashboard |
     <div class="dashboard-nav">
         <div class="dashboard-nav__group">
             <span class="dashboard-group__label">Account</span>
-            <a class="dashboard-group__item {% if request.path == '/security' %}active{% endif %}" href="{{ url_for('account_security') }}">Security</a>
+            <a class="dashboard-group__item {% if request.path == '/security' %}active{% endif %}" href="{{ url_for('security') }}">Security</a>
         </div>
         {% if request.state.is_admin %}
         <div class="dashboard-nav__group">

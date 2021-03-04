@@ -6,11 +6,11 @@ from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 from kami.routes.home import Homepage
 from kami.routes.auth import Login, Logout
-from kami.routes.dashboard import Dashboard, AccountSecurity
+from kami.routes.dashboard import Dashboard
 from kami.routes.anime import AnimeEndpoint, AnimeAdd, AnimeRemove, AnimeEdit
 from kami.routes.fansub import FansubEndpoint, FansubAdd, FansubRemove, FansubEdit
-from kami.routes.changepassword import ChangePassword
 from kami.routes.pages import PagesEndpoint, PagesAdd, PagesRemove, PagesEdit, PagesGet
+from kami.routes.security import SecurityEndpoint, ChangePassword
 from kami.exceptions import not_found
 from kami.config import DEBUG, ALLOWED_HOSTS
 from kami.middleware.jwt import JwtMiddleware
@@ -26,8 +26,8 @@ def create_app() -> Starlette:
         Mount("/dashboard", routes=[
             Route("/", Dashboard, name="dashboard"),
             Mount("/account", routes=[
-                Route("/security", AccountSecurity, name="account_security"),
-                Route("/security/changepassword", ChangePassword, name="security_changepassword")
+                Route("/security", SecurityEndpoint, name="security"),
+                Route("/security/changepassword", ChangePassword, name="changepassword")
             ]),
             Mount("/admin", routes=[
                 Route("/anime", AnimeEndpoint, name="anime"),
