@@ -26,8 +26,8 @@ new List('table', {
 });
 
 [
-    '#admin-add-anime',
-    '#admin-anime-edit'
+    '#anime-add',
+    '#anime-edit'
 ].forEach(function (selector) {
     var element = document.querySelector(selector)
 

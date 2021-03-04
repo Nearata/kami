@@ -9,20 +9,20 @@ from starlette.responses import RedirectResponse
 
 from kami.templating import templates
 from kami.decorators import jwt_authenticated, jwt_is_admin
-from kami.database import Pages as PagesTable
+from kami.database import Pages
 
 
-class Pages(HTTPEndpoint):
+class PagesEndpoint(HTTPEndpoint):
     def __response(self, request: Request, extra: Optional[dict] = None) -> _TemplateResponse:
         context = {
             "request": request,
-            "pages": PagesTable.select()
+            "pages": Pages.select()
         }
 
         if extra:
             context.update(extra)
 
-        return templates.TemplateResponse("pages/index.html", context)
+        return templates.TemplateResponse("pages/backend.html", context)
 
     @jwt_authenticated
     @jwt_is_admin
@@ -37,8 +37,8 @@ class Pages(HTTPEndpoint):
         page_id = data.get("id", "")
 
         try:
-            PagesTable.get(id=page_id)
-        except PagesTable.DoesNotExist:
+            Pages.get(id=page_id)
+        except Pages.DoesNotExist:
             return self.__response(request, {"error": "The page you want to edit doesn't exists."})
 
         return RedirectResponse(request.url_for("pages_edit", id=page_id), 303)
@@ -49,8 +49,8 @@ class PagesGet(HTTPEndpoint):
         slug = request.path_params.get("slug", "")
 
         try:
-            page = PagesTable.get(slug=slug)
-        except PagesTable.DoesNotExist:
+            page = Pages.get(slug=slug)
+        except Pages.DoesNotExist:
             raise HTTPException(404)
 
         context = {
@@ -103,15 +103,15 @@ class PagesAdd(HTTPEndpoint):
             errors.append("The field content is mandatory.")
 
         try:
-            PagesTable.get(name=name)
+            Pages.get(name=name)
             errors.append("A page with this name already exists.")
-        except PagesTable.DoesNotExist:
+        except Pages.DoesNotExist:
             pass
 
         if errors:
             return self.__response(request, {"errors": errors})
 
-        PagesTable.create(
+        Pages.create(
             name=name,
             slug=slug,
             icon=icon,
@@ -125,7 +125,7 @@ class PagesRemove(HTTPEndpoint):
     def __response(self, request: Request, extra: Optional[dict] = None) -> _TemplateResponse:
         context = {
             "request": request,
-            "pages": PagesTable.select()
+            "pages": Pages.select()
         }
 
         if extra:
@@ -146,8 +146,8 @@ class PagesRemove(HTTPEndpoint):
         page_id = data.get("id", "")
 
         try:
-            PagesTable.get(id=page_id).delete_instance()
-        except PagesTable.DoesNotExist:
+            Pages.get(id=page_id).delete_instance()
+        except Pages.DoesNotExist:
             return self.__response(request, {"error": "Page doesn't exists."})
 
         return self.__response(request, {"success": "Page removed."})
@@ -170,8 +170,8 @@ class PagesEdit(HTTPEndpoint):
         page_id = request.path_params.get("id", "")
 
         try:
-            page = PagesTable.get(id=page_id)
-        except PagesTable.DoesNotExist:
+            page = Pages.get(id=page_id)
+        except Pages.DoesNotExist:
             return RedirectResponse(request.url_for("pages"), 303)
 
         context = {
@@ -209,8 +209,8 @@ class PagesEdit(HTTPEndpoint):
             errors.append("The field content is mandatory.")
 
         try:
-            page = PagesTable.get(id=page_id)
-        except PagesTable.DoesNotExist:
+            page = Pages.get(id=page_id)
+        except Pages.DoesNotExist:
             errors.append("The page you are trying to edit doesn't exists.")
 
         context = {

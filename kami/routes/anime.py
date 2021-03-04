@@ -1,3 +1,6 @@
+from typing import Optional
+from datetime import datetime
+
 from starlette.endpoints import HTTPEndpoint
 from starlette.requests import Request
 from starlette.responses import RedirectResponse
@@ -8,18 +11,17 @@ from kami.database import Anime, Fansub
 from kami.templating import templates
 
 
-class AdminAnime(HTTPEndpoint):
-    def __response(self, request: Request, extra: dict = None) -> _TemplateResponse:
+class AnimeEndpoint(HTTPEndpoint):
+    def __response(self, request: Request, extra: Optional[dict] = None) -> _TemplateResponse:
         context = {
             "request": request,
-            "fansub": Fansub.select(),
             "anime": Anime.select()
         }
 
         if extra:
             context.update(extra)
 
-        return templates.TemplateResponse("admin_anime.html", context)
+        return templates.TemplateResponse("anime/backend.html", context)
 
     @jwt_authenticated
     @jwt_is_admin
@@ -28,34 +30,62 @@ class AdminAnime(HTTPEndpoint):
 
     @jwt_authenticated
     @jwt_is_admin
-    async def post(self, request: Request):
-        data = await request.form()
-        formtype = data.get("formtype")
-
-        if formtype == "add_anime":
-            return await self.__add_anime(request)
-
-        if formtype == "remove_anime":
-            return await self.__remove_anime(request)
-
-        if formtype == "edit_anime":
-            anime = Anime.get(name=data.get("name"))
-            return RedirectResponse(request.url_for("admin_anime_edit", id=anime.id), 303)
-
-        return RedirectResponse(request.url_for("admin_anime"))
-
-    async def __add_anime(self, request: Request) -> _TemplateResponse:
+    async def post(self, request: Request) -> _TemplateResponse:
         data = await request.form()
 
-        name = data.get("name")
-        fansub_name = data.get("fansub")
-        url = data.get("url")
+        anime_id = data.get("id", "")
+
+        try:
+            Anime.get(id=anime_id)
+        except Anime.DoesNotExist:
+            return self.__response(request, {"error": "The anime you want to edit doesn't exists."})
+
+        return RedirectResponse(request.url_for("anime_edit", id=anime_id), 303)
+
+
+class AnimeAdd(HTTPEndpoint):
+    def __response(self, request: Request, extra: Optional[dict] = None) -> _TemplateResponse:
+        context = {
+            "request": request,
+            "anime": Anime.select(),
+            "fansub": Fansub.select()
+        }
+
+        if extra:
+            context.update(extra)
+
+        return templates.TemplateResponse("anime/add.html", context)
+
+    @jwt_authenticated
+    @jwt_is_admin
+    async def get(self, request: Request) -> _TemplateResponse:
+        return self.__response(request)
+
+    @jwt_authenticated
+    @jwt_is_admin
+    async def post(self, request: Request) -> _TemplateResponse:
+        data = await request.form()
+
+        name = data.get("name", "")
+        fansub_name = data.get("fansub", "")
+        url = data.get("url", "")
+
+        errors = []
+
+        if not name:
+            errors.append("The field name is mandatory.")
+
+        if not url:
+            errors.append("The field url is mandatory.")
 
         try:
             Anime.get(name=name)
-            return self.__response(request, {"error": "This anime is already in the database."})
+            errors.append("This anime is already in the database.")
         except Anime.DoesNotExist:
             pass
+
+        if errors:
+            return self.__response(request, {"errors": errors})
 
         try:
             fansub = Fansub.get(name=fansub_name)
@@ -71,22 +101,40 @@ class AdminAnime(HTTPEndpoint):
 
         return self.__response(request, {"success": "Anime added."})
 
-    async def __remove_anime(self, request: Request) -> _TemplateResponse:
+
+class AnimeRemove(HTTPEndpoint):
+    def __response(self, request: Request, extra: Optional[dict] = None) -> _TemplateResponse:
+        context = {
+            "request": request,
+            "anime": Anime.select()
+        }
+
+        if extra:
+            context.update(extra)
+
+        return templates.TemplateResponse("anime/remove.html", context)
+
+    @jwt_authenticated
+    @jwt_is_admin
+    async def get(self, request: Request) -> _TemplateResponse:
+        return self.__response(request)
+
+    @jwt_authenticated
+    @jwt_is_admin
+    async def post(self, request: Request) -> _TemplateResponse:
         data = await request.form()
 
-        name = data.get("name")
+        anime_id = data.get("id", "")
 
         try:
-            Anime.get(name=name)
+            Anime.get(id=anime_id).delete_instance()
         except Anime.DoesNotExist:
-            return self.__response(request, {"error": "This anime doesn't exists."})
+            return self.__response(request, {"error": "The anime you want to remove doesn't exists."})
 
-        Anime.get(name=name).delete_instance()
-
-        return self.__response(request, {"success": f"Anime {name} removed."})
+        return self.__response(request, {"success": "Anime removed."})
 
 
-class AdminAnimeEdit(HTTPEndpoint):
+class AnimeEdit(HTTPEndpoint):
     def __response(self, request: Request, extra: dict = None) -> _TemplateResponse:
         context = {
             "request": request,
@@ -96,7 +144,7 @@ class AdminAnimeEdit(HTTPEndpoint):
         if extra:
             context.update(extra)
 
-        return templates.TemplateResponse("admin_anime_edit.html", context)
+        return templates.TemplateResponse("anime/edit.html", context)
 
     @jwt_authenticated
     @jwt_is_admin
@@ -108,7 +156,7 @@ class AdminAnimeEdit(HTTPEndpoint):
             fansub = Fansub.get(id=anime.fansub_id)
             fansub_name = fansub.name
         except Anime.DoesNotExist:
-            return RedirectResponse(request.url_for("admin_anime"))
+            return RedirectResponse(request.url_for("anime"))
         except Fansub.DoesNotExist:
             fansub_name = ""
 
@@ -124,9 +172,30 @@ class AdminAnimeEdit(HTTPEndpoint):
         data = await request.form()
         anime_id = request.path_params["id"]
 
-        name = data.get("name")
-        fansub_name = data.get("fansub")
-        url = data.get("url")
+        name = data.get("name", "")
+        fansub_name = data.get("fansub", "")
+        url = data.get("url", "")
+
+        errors = []
+
+        if not name:
+            errors.append("The field name is mandatory.")
+
+        if not fansub_name:
+            errors.append("The field fansub is mandatory.")
+
+        if not url:
+            errors.append("The field url is mandatory.")
+
+        context = {
+            "errors": errors,
+            "title": name,
+            "current_fansub": fansub_name,
+            "url": url.replace(",", "\n")
+        }
+
+        if errors:
+            return self.__response(request, context)
 
         anime = Anime.get(id=anime_id)
 
@@ -141,12 +210,15 @@ class AdminAnimeEdit(HTTPEndpoint):
         setattr(anime, "name", name)
         setattr(anime, "fansub_id", fansub_id)
         setattr(anime, "url", url)
+        setattr(anime, "updated_at", datetime.now())
 
         anime.save()
 
-        return self.__response(request, {
+        context = {
             "success": "Anime edited.",
             "title": anime.name,
             "current_fansub": fansub_name,
-            "url": anime.url
-        })
+            "url": anime.url.replace(",", "\n")
+        }
+
+        return self.__response(request, context)

@@ -1,13 +1,13 @@
 {% extends "dashboard.html" %}
 
 {% block head_title %}
-Edit Anime |
+Add Anime |
 {% endblock %}
 
 {% block content %}
 <div class="card">
     <div class="card__header">
-        <h1 class="h1 card__title">Edit Anime</h1>
+        <h1 class="h1 card__title">Anime</h1>
     </div>
     <div class="card__body">
         {% if success %}
@@ -15,30 +15,34 @@ Edit Anime |
             <div class="alert__message">{{ success }}</div>
         </div>
         {% endif %}
-        {% if error %}
+
+        {% if errors %}
         <div class="alert alert--warning">
-            <div class="alert__message">{{ error }}</div>
+            {% for i in errors %}
+            <div class="alert__message">{{ i }}</div>
+            {% endfor %}
         </div>
         {% endif %}
-        <form id="admin-anime-edit" class="form" method="post">
+
+        <form id="anime-add" class="form" method="post">
             <div class="form__group">
                 <label class="label" for="name">Title</label>
-                <input class="input input--full" type="text" name="name" placeholder="{{ title }}" value="{{ title }}" autocomplete="off" required>
+                <input class="input" type="text" name="name" placeholder="Title" autocomplete="off" required>
             </div>
             <div class="form__group">
                 <label class="label" for="fansub">Fansub</label>
                 <select id="select-add" name="fansub" placeholder="Fansub..." autocomplete="off">
                     <option value="">None</option>
                     {% for i in fansub %}
-                    <option value="{{ i.name }}" {% if i.name == current_fansub %}selected{% endif %}>{{ i.name }}</option>
+                    <option value="{{ i.name }}">{{ i.name }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div class="form__group">
-                <label class="label" for="url">URLs <small>(one per line)</small></label>
-                <textarea class="input" name="url" cols="30" rows="10" value="ciao">{{ url }}</textarea>
+                <label class="label" for="url">URLs <small>(one per line, formatted as 'name;url')</small></label>
+                <textarea class="input" name="url" cols="30" rows="10" required></textarea>
             </div>
-            <button class="button" type="submit">Save changes</button>
+            <button class="button" type="submit">Add anime</button>
         </form>
     </div>
 </div>

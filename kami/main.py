@@ -7,10 +7,10 @@ from starlette.middleware.trustedhost import TrustedHostMiddleware
 from kami.routes.home import Homepage
 from kami.routes.auth import Login, Logout
 from kami.routes.dashboard import Dashboard, AccountSecurity
-from kami.routes.anime import AdminAnime, AdminAnimeEdit
+from kami.routes.anime import AnimeEndpoint, AnimeAdd, AnimeRemove, AnimeEdit
 from kami.routes.fansub import AdminFansub, AdminFansubEdit
 from kami.routes.changepassword import ChangePassword
-from kami.routes.pages import Pages, PagesAdd, PagesRemove, PagesEdit, PagesGet
+from kami.routes.pages import PagesEndpoint, PagesAdd, PagesRemove, PagesEdit, PagesGet
 from kami.exceptions import not_found
 from kami.config import DEBUG, ALLOWED_HOSTS
 from kami.middleware.jwt import JwtMiddleware
@@ -30,11 +30,13 @@ def create_app() -> Starlette:
                 Route("/security/changepassword", ChangePassword, name="security_changepassword")
             ]),
             Mount("/admin", routes=[
-                Route("/anime", AdminAnime, name="admin_anime"),
-                Route("/anime/{id:int}", AdminAnimeEdit, name="admin_anime_edit"),
+                Route("/anime", AnimeEndpoint, name="anime"),
+                Route("/anime/add", AnimeAdd, name="anime_add"),
+                Route("/anime/remove", AnimeRemove, name="anime_remove"),
+                Route("/anime/edit/{id:int}", AnimeEdit, name="anime_edit"),
                 Route("/fansub", AdminFansub, name="admin_fansub"),
                 Route("/fansub/{id:int}", AdminFansubEdit, name="admin_fansub_edit"),
-                Route("/pages", Pages, name="pages"),
+                Route("/pages", PagesEndpoint, name="pages"),
                 Route("/pages/add", PagesAdd, name="pages_add"),
                 Route("/pages/remove", PagesRemove, name="pages_remove"),
                 Route("/pages/edit/{id:int}", PagesEdit, name="pages_edit")
