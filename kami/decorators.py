@@ -32,6 +32,14 @@ def jwt_authenticated(func: Callable) -> Callable:
 
             return response
 
+        try:
+            UsersSessions.get(jwt_token=jwt_token)
+        except UsersSessions.DoesNotExist:
+            response = RedirectResponse(request.url)
+            response.delete_cookie("jwt_token")
+
+            return response
+
         return await func(*args, **kwargs)
     return decorator
 
